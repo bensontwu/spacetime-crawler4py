@@ -1,13 +1,36 @@
 import re
 from urllib.parse import urlparse
 
+import requests
+from bs4 import BeautifulSoup as soup
+
+def tokenize(text):
+    token_list = []
+
+    alphanum = nltk.tokenize.RegexpTokenizer()
+
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
 
+
 def extract_next_links(url, resp):
-    # Implementation requred.
-    return list()
+
+    urls = list()
+
+    http = requests.get(url).text
+    html = soup(http, 'html.parser')
+
+    # find_all(name, keyword)
+    # Refer to https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all
+    for link in html.find_all("a", href=re.compile("^/.")):
+        urls.append(url+link["href"])
+
+    print("Numer of pages found: ", len(urls))
+
+    return urls
+
 
 def is_valid(url):
     try:
@@ -27,3 +50,20 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+
+# urls = ['http://quotes.toscrape.com']
+
+# while len(urls) != 0:
+
+#     url = urls.pop(0)
+
+#     http = requests.get(url).text
+#     html = soup(http, 'html.parser')
+
+#     for link in html.find_all("a", href=re.compile("^/.")):
+#         print(url+link["href"])
+
+#     urls.pop(0)
+
+# print(urls)
