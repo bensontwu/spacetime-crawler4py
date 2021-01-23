@@ -3,6 +3,14 @@ import sys
 #this is O(N) and linear relative to the size of the input because it iterates trhough each line of the file once
 def tokenize(TextFilePath):
     final_list=[]
+    stop_set = set()
+    stopFile = open("stop_words.txt","r")
+    while True:
+        word = stopFile.readline().lower()
+        if word == "":
+            break
+        else:
+            stop_set.add(word.strip())
     try:
         file = open(TextFilePath,"r")
         while True:
@@ -13,7 +21,7 @@ def tokenize(TextFilePath):
                 
                 temp = re.split("[^A-Za-z0-9']",line)
                 for i in temp:
-                    if i !="":
+                    if i !="" and i not in stop_set and len(i)>=3:
                         final_list.append(i)
                         
     except FileNotFoundError:
@@ -41,6 +49,7 @@ def freqPrint(Frequencies):
 
 def main():
     file = sys.argv[1]
+    print(tokenize(file))
     freqPrint(computeWordFrequencies(tokenize(file)))
     
 if __name__ == "__main__":
