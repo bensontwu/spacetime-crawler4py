@@ -11,7 +11,7 @@ def tokenize(TextFilePath):
                 break
             else:
                 
-                temp = re.split("[^A-Za-z0-9]",line)
+                temp = re.split("[^A-Za-z0-9']",line)
                 for i in temp:
                     if i !="":
                         final_list.append(i)
