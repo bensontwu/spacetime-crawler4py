@@ -2,11 +2,16 @@ from bs4.element import Comment
 from utils.soup import get_soup
 
 import re
+import os
 
 class Tokenizer:
-    def __init__(self, config):
+    def __init__(self, config, restart: bool):
         self.config = config
         self.stop_set = self._gen_stop_set(config)
+
+        # remove the tokens file from the last run
+        if os.path.exists(config.tokens_file) and restart:
+            os.remove(config.tokens_file)
     
     # takes response object and prints tokens to file
     def print_tokens_to_file(self, resp) -> list:

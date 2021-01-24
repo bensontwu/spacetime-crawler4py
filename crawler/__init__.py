@@ -12,7 +12,7 @@ class Crawler(object):
         self.workers = list()
         self.worker_factory = worker_factory
         self.subdomain_printer = SubDomainPrinter(config, restart)
-        self.tokenizer = Tokenizer(config)
+        self.tokenizer = Tokenizer(config, restart)
 
     def start_async(self):
         self.workers = [

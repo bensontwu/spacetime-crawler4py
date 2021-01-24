@@ -1,11 +1,16 @@
 from urllib.parse import urlparse
 
 import re
+import os
 
 class SubDomainPrinter:
     def __init__(self, config, restart: bool):
         self.config = config
         self.domain = config.domain
+
+        # remove the tokens file from the last run
+        if os.path.exists(config.subdomain_file) and restart:
+            os.remove(config.subdomain_file)
 
     # takes a list of urls and prints subdomains to file
     def print_sub_doms_to_file(self, urls: list) -> None:
