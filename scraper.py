@@ -75,9 +75,19 @@ def is_valid(url):
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
 
+        return re.match(r".*\.(ics\.uci\.edu|cs\.uci\.edu|informatics\.uci\.edu|stat\.uci\.edu" +
+                        r"|today\.uci\.edu/department/information_computer_sciences)", url)
+
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+# Test code for matching
+tests = ['aaa.ui.edu']
+
+print(re.match(r".*\.(ics\.uci\.edu|cs\.uci\.edu|informatics\.uci\.edu|stat\.uci\.edu" +
+                r"|today\.uci\.edu/department/information_computer_sciences)", 'www.stat.uci.edu\aaa'))
+
 
 
 # This function return true
@@ -95,7 +105,7 @@ def elem_check(element):
 
 
 
-urls = ['https://www.ics.uci.edu/community/alumni/']
+urls = ['https://www.cs.uci.edu/']
 
 
 url = urls.pop(0)
@@ -110,4 +120,6 @@ ext_text = filter(elem_check, texts)
 
 clean_text = " ".join(t.strip() for t in ext_text)
 
-print(clean_text)
+tokens = tokenize(clean_text)
+
+print(tokens)
