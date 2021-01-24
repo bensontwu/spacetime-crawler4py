@@ -37,9 +37,10 @@ def is_valid(url):
             + r"|thmx|mso|arff|rtf|jar|csv"
                 + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) is None:
 
-            if (re.match(r".(.ics.uci.edu|.cs.uci.edu|.informatics.uci.edu|.stat.uci.edu" +
-                         r"|today.uci.edu/department/information_computer_sciences)", url) is not None):
+            if (re.match(r".*((\.|)ics\.uci\.edu|(\.|)cs\.uci\.edu|(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu" +
+                         r"|today\.uci\.edu/department/information_computer_sciences)", url) is not None):
                 return True
+            return False
         return False
 
     except TypeError:
