@@ -100,7 +100,7 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) is None:
 
 
-            if (re.match(r".*(\.ics\.uci\.edu|\.cs\.uci\.edu|\.informatics\.uci\.edu|\.stat\.uci\.edu" +
+            if (re.match(r".*((\.|)ics\.uci\.edu|(\.|)cs\.uci\.edu|(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu" +
                             r"|today\.uci\.edu/department/information_computer_sciences)", url) is not None):
 
                 return True
@@ -111,39 +111,40 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
-print(is_valid("https://today.uci.edu/department/information_computer_sciences"))
+
+print(is_valid("https://www.stat.uci.edu/laist-socal-professors-push-to-make-college-level-statistics-less-painful-jessica-utts-quoted"))
 
 
-This function return true
-1. if text element is not comment inside html.
-2. if text element is not inside invalid html tags.
-Refered to : https://stackoverflow.com/questions/1936466/beautifulsoup-grab-visible-webpage-text
-def elem_check(element):
-    if isinstance(element, Comment):
-            return False
+# This function return true
+# 1. if text element is not comment inside html.
+# 2. if text element is not inside invalid html tags.
+# Refered to : https://stackoverflow.com/questions/1936466/beautifulsoup-grab-visible-webpage-text
+# def elem_check(element):
+#     if isinstance(element, Comment):
+#             return False
     
-    elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]']:
-            return False
+#     elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]']:
+#             return False
 
-    return True
-
-
-
-urls = ['https://www.cs.uci.edu/']
+#     return True
 
 
-url = urls.pop(0)
 
-http = requests.get(url).text
-html = soup(http, 'html.parser')
-
-texts = html.findAll(text=True)
+# urls = ['https://www.cs.uci.edu/']
 
 
-ext_text = filter(elem_check, texts) 
+# url = urls.pop(0)
 
-clean_text = " ".join(t.strip() for t in ext_text)
+# http = requests.get(url).text
+# html = soup(http, 'html.parser')
 
-tokens = tokenize(clean_text)
+# texts = html.findAll(text=True)
 
-print(tokens)
+
+# ext_text = filter(elem_check, texts) 
+
+# clean_text = " ".join(t.strip() for t in ext_text)
+
+# tokens = tokenize(clean_text)
+
+# print(tokens)
