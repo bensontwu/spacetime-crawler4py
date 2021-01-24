@@ -83,6 +83,7 @@ def is_valid(url):
 # This function return true
 # 1. if text element is not comment inside html.
 # 2. if text element is not inside invalid html tags.
+# Refered to : https://stackoverflow.com/questions/1936466/beautifulsoup-grab-visible-webpage-text
 def elem_check(element):
     if isinstance(element, Comment):
             return False
