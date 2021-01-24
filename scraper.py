@@ -113,51 +113,37 @@ def is_valid(url):
 
 print(is_valid("https://today.uci.edu/department/information_computer_sciences"))
 
-# and
 
-#         re.match(r".*\.(ics\.uci\.edu|cs\.uci\.edu|informatics\.uci\.edu|stat\.uci\.edu" +
-#                         r"|today\.uci\.edu/department/information_computer_sciences)", url) != 'None'):
-# Test code for matching
-# print(re.match(r".*\.(ics\.uci\.edu|cs\.uci\.edu|informatics\.uci\.edu|stat\.uci\.edu" +
-                # r"|today\.uci\.edu/department/information_computer_sciences)", 'today.uci.edu/department/aaaa'))
-
-
-# def test(num):
-#     return num=1 and num*num=1
-
-# print(test(1))
-
-
-# This function return true
-# 1. if text element is not comment inside html.
-# 2. if text element is not inside invalid html tags.
-# Refered to : https://stackoverflow.com/questions/1936466/beautifulsoup-grab-visible-webpage-text
-# def elem_check(element):
-#     if isinstance(element, Comment):
-#             return False
+This function return true
+1. if text element is not comment inside html.
+2. if text element is not inside invalid html tags.
+Refered to : https://stackoverflow.com/questions/1936466/beautifulsoup-grab-visible-webpage-text
+def elem_check(element):
+    if isinstance(element, Comment):
+            return False
     
-#     elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]']:
-#             return False
+    elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]']:
+            return False
 
-#     return True
-
-
-
-# urls = ['https://www.cs.uci.edu/']
+    return True
 
 
-# url = urls.pop(0)
 
-# http = requests.get(url).text
-# html = soup(http, 'html.parser')
-
-# texts = html.findAll(text=True)
+urls = ['https://www.cs.uci.edu/']
 
 
-# ext_text = filter(elem_check, texts) 
+url = urls.pop(0)
 
-# clean_text = " ".join(t.strip() for t in ext_text)
+http = requests.get(url).text
+html = soup(http, 'html.parser')
 
-# tokens = tokenize(clean_text)
+texts = html.findAll(text=True)
 
-# print(tokens)
+
+ext_text = filter(elem_check, texts) 
+
+clean_text = " ".join(t.strip() for t in ext_text)
+
+tokens = tokenize(clean_text)
+
+print(tokens)
