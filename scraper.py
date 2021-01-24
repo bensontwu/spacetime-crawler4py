@@ -9,55 +9,55 @@ from bs4.element import Comment
 
 #this is O(N) and linear relative to the size of the input because it iterates trhough each line of the file once
 def tokenize(text):
-    final_list=[]
-    stop_set = set()
-    stopFile = open("stop_words.txt","r")
-    while True:
-        word = stopFile.readline().lower()
-        if word == "":
-            break
-        else:
-            stop_set.add(word.strip())
-    try:
-        while True:
-            line = text.readline().lower()
-            if line == "":
-                break
-            else:
-                
-                temp = re.split("[^A-Za-z0-9']",line)
-                for i in temp:
-                    if i !="" and i not in stop_set and len(i)>=3:
-                        final_list.append(i)
-                        
-    except FileNotFoundError:
-        print("This file doesn't exist.")
-        return []
-    if final_list ==[]:
-        print("This file has no tokens.")
-    return final_list
+	final_list=[]
+	stop_set = set()
+	stopFile = open("stop_words.txt","r")
+	while True:
+		word = stopFile.readline().lower()
+		if word == "":
+			break
+		else:
+			stop_set.add(word.strip())
+	try:
+		while True:
+			line = text.readline().lower()
+			if line == "":
+				break
+			else:
+				
+				temp = re.split("[^A-Za-z0-9']",line)
+				for i in temp:
+					if i !="" and i not in stop_set and len(i)>=3:
+						final_list.append(i)
+						
+	except FileNotFoundError:
+		print("This file doesn't exist.")
+		return []
+	if final_list ==[]:
+		print("This file has no tokens.")
+	return final_list
 
 
 def scraper(url, resp):
-    links = extract_next_links(url, resp)
-    return [link for link in links if is_valid(link)]
+	links = extract_next_links(url, resp)
+	return [link for link in links if is_valid(link)]
 
 
 def extract_next_links(url, resp):
 
-    urls = list()
+	urls = list()
 
-    http = requests.get(url).text
-    html = soup(http, 'html.parser')
+	http = requests.get(url).text
+	html = soup(http, 'html.parser')
 
-    # find_all(name, keyword)
-    # Refer to https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all
-    for link in html.find_all("a", href=re.compile("^/.")):
-        urls.append(url+link["href"])
+	# find_all(name, keyword)
+	# Refer to https://www.crummy.com/software/BeautifulSoup/bs4/doc/#find-all
+	for link in html.find_all("a", href=re.compile("^/.")):
+		urls.append(url+link["href"])
 
-    print("Numer of pages found: ", len(urls))
+	print("Numer of pages found: ", len(urls))
 
-    return urls
+	return urls
 
 
 # def is_valid(url):
@@ -84,36 +84,43 @@ def extract_next_links(url, resp):
 
 
 def is_valid(url):
-    try:
-        parsed = urlparse(url)
-        if parsed.scheme not in set(["http", "https"]):
-            return False
+	try:
+		parsed = urlparse(url)
+		if parsed.scheme not in set(["http", "https"]):
+			return False
 
-        if re.match(
-            r".*\.(css|js|bmp|gif|jpe?g|ico"
-            + r"|png|tiff?|mid|mp2|mp3|mp4"
-            + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-            + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
-            + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) is None:
+		if len(parsed.fragment) != 0 | len(parsed.query) != 0:
+			return False
 
-
-            if (re.match(r".*((\.|)ics\.uci\.edu|(\.|)cs\.uci\.edu|(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu" +
-                            r"|today\.uci\.edu/department/information_computer_sciences)", url) is not None):
-
-                return True
-
-            return False
-
-    except TypeError:
-        print ("TypeError for ", parsed)
-        raise
+		if re.match(
+			r".*\.(css|js|bmp|gif|jpe?g|ico"
+			+ r"|png|tiff?|mid|mp2|mp3|mp4"
+			+ r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
+			+ r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
+			+ r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
+			+ r"|epub|dll|cnf|tgz|sha1"
+			+ r"|thmx|mso|arff|rtf|jar|csv"
+			+ r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) is None:
 
 
-print(is_valid("https://www.stat.uci.edu/laist-socal-professors-push-to-make-college-level-statistics-less-painful-jessica-utts-quoted"))
+			if (re.match(r".*((\.|)ics\.uci\.edu|(\.|)cs\.uci\.edu|(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu" +
+							r"|today\.uci\.edu/department/information_computer_sciences)", url) is not None):
 
+				return True
+
+			return False
+
+		return False
+
+	except TypeError:
+		print ("TypeError for ", parsed)
+		raise
+
+
+print(is_valid("https://www.crummy.com/software/BeautifulSoup/bs4/doc/#getting-help"))
+
+
+# print(urlparse("https://evoke.ics.uci.edu/hollowing-i-in-the-authorship-of-letters-a-note-on-flusser-and-surveillance/?hello&replytocom=48217#respond"))
 
 # This function return true
 # 1. if text element is not comment inside html.
@@ -122,7 +129,7 @@ print(is_valid("https://www.stat.uci.edu/laist-socal-professors-push-to-make-col
 # def elem_check(element):
 #     if isinstance(element, Comment):
 #             return False
-    
+	
 #     elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]']:
 #             return False
 
