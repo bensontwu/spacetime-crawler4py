@@ -111,3 +111,6 @@ venv.bak/
 
 # shelve
 frontier.shelve.db
+
+# bin
+bin/

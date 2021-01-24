@@ -11,7 +11,6 @@ def extract_next_links(url, resp):
     soup = get_soup(resp)
 
     if soup == None:
-        print("soup is none")
         return list()
 
     next_links = []
