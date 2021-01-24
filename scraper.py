@@ -4,10 +4,38 @@ from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup as soup
 
-def tokenize(text):
-    token_list = []
+from bs4.element import Comment
 
-    alphanum = nltk.tokenize.RegexpTokenizer()
+
+#this is O(N) and linear relative to the size of the input because it iterates trhough each line of the file once
+def tokenize(text):
+    final_list=[]
+    stop_set = set()
+    stopFile = open("stop_words.txt","r")
+    while True:
+        word = stopFile.readline().lower()
+        if word == "":
+            break
+        else:
+            stop_set.add(word.strip())
+    try:
+        while True:
+            line = text.readline().lower()
+            if line == "":
+                break
+            else:
+                
+                temp = re.split("[^A-Za-z0-9']",line)
+                for i in temp:
+                    if i !="" and i not in stop_set and len(i)>=3:
+                        final_list.append(i)
+                        
+    except FileNotFoundError:
+        print("This file doesn't exist.")
+        return []
+    if final_list ==[]:
+        print("This file has no tokens.")
+    return final_list
 
 
 def scraper(url, resp):
@@ -52,18 +80,33 @@ def is_valid(url):
         raise
 
 
-# urls = ['http://quotes.toscrape.com']
+# This function return true
+# 1. if text element is not comment inside html.
+# 2. if text element is not inside invalid html tags.
+def elem_check(element):
+    if isinstance(element, Comment):
+            return False
+    
+    elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]']:
+            return False
 
-# while len(urls) != 0:
+    return True
 
-#     url = urls.pop(0)
 
-#     http = requests.get(url).text
-#     html = soup(http, 'html.parser')
 
-#     for link in html.find_all("a", href=re.compile("^/.")):
-#         print(url+link["href"])
+urls = ['https://www.ics.uci.edu/community/alumni/']
 
-#     urls.pop(0)
 
-# print(urls)
+url = urls.pop(0)
+
+http = requests.get(url).text
+html = soup(http, 'html.parser')
+
+texts = html.findAll(text=True)
+
+
+ext_text = filter(elem_check, texts) 
+
+clean_text = " ".join(t.strip() for t in ext_text)
+
+print(clean_text)
