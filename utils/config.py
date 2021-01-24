@@ -17,3 +17,11 @@ class Config(object):
         self.time_delay = float(config["CRAWLER"]["POLITENESS"])
 
         self.cache_server = None
+
+        # subdomain configs
+        self.subdomain_file = config["LOCAL PROPERTIES"]["SUBDOMAIN_FILE"]
+        self.domain = config["LOCAL PROPERTIES"]["DOMAIN"]
+
+        # Tokenizer configs
+        self.tokens_file = config["LOCAL PROPERTIES"]["TOKENS"]
+        self.stop_words = config["LOCAL PROPERTIES"]["STOP_WORDS"]
