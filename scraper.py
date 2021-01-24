@@ -36,7 +36,7 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
         
-        if len(parsed.fragment) != 0 | len(parsed.query) != 0:
+        if len(parsed.fragment) != 0 or len(parsed.query) != 0:
             return False
 
         if re.match(
