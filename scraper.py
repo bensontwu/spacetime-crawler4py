@@ -5,7 +5,7 @@ import requests
 from utils.soup import get_soup
 from utils.trap_check import TrapCheck
 
-MAX_CONTENT_SIZE = 20000
+MAX_CONTENT_SIZE = 50000
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -45,7 +45,7 @@ def is_valid(url):
         # check content length
         try:
             response = requests.head(url)
-            if response.status_code != 200 or response.headers['content-length'] == 0 or response.header['content-length'] > MAX_CONTENT_SIZE:
+            if response.status_code != 200 or response.headers['content-length'] == 0 or response.headers['content-length'] > MAX_CONTENT_SIZE:
                 return False
         except KeyError:
             pass
