@@ -102,13 +102,14 @@ def is_valid(url):
 			+ r"|thmx|mso|arff|rtf|jar|csv"
 			+ r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|odc)$", parsed.path.lower()) is None:
 
-			if re.match(r"https://wics\.ics\.uci\.edu/events/\d{4}(-\d+)+." +
-						r"|https://wics.ics.uci.edu/events/category/social-gathering/\d{4}(-\d+)+."+
-						r"|https://wics.ics.uci.edu/events/category/project-meeting/\d{4}(-\d+)+."):
+			if re.match(r"http(s|)://wics\.ics\.uci\.edu/events/\d{4}(-\d+)+." +
+						r"|http(s|)://wics\.ics\.uci\.edu/events/category/social-gathering/\d{4}(-\d+)+."+
+						r"|http(s|)://wics\.ics\.uci\.edu/events/category/project-meeting/\d{4}(-\d+)+.", url) is not None:
 				return False
 
 
-			if (re.match(r".*(\b(\.|)ics\.uci\.edu\b|\b(\.|)cs\.uci\.edu\b|\b(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu\b" +
+			if (re.match(r".*(\b(\.|)ics\.uci\.edu\b|\b(\.|)cs\.uci\.edu\b" +
+							r"|\b(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu\b" +
 							r"|\btoday\.uci\.edu/department/information_computer_sciences\b)", url) is not None):
 
 				return True
@@ -124,8 +125,11 @@ def is_valid(url):
 		print ("TypeError for ", parsed)
 		raise
 
+urls = ['https://wics.ics.uci.edu/events/2021-01-25', 'https://wics.ics.uci.edu/events/category/social-gathering/2020-05',
+		'https://wics.ics.uci.edu/events/category/project-meeting/2019-04', 'https://wics.ics.uci.edu/events/category/project-meeting']
 
-print(is_valid("http://www.ics.uci.edu.ee/~dbrownst"))
+for url in urls:
+	print(is_valid(url))
 
 
 # https://wics.ics.uci.edu/events/2021-01-25/
