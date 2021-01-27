@@ -24,4 +24,4 @@ class SubDomainPrinter:
     def _is_subdomain(self, sub_dom: str) -> bool:
         re_string = f"^((.+)\.)+{re.escape(self.domain)}$"
         pattern = re.compile(re_string)
-        return pattern.match(sub_dom) and re_string != ("www." + self.domain)
+        return pattern.match(sub_dom) and sub_dom != ("www." + self.domain)
