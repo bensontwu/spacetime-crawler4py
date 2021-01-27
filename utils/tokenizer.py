@@ -9,6 +9,10 @@ class Tokenizer:
         self.config = config
         self.stop_set = self._gen_stop_set(config)
 
+        # For question 2
+        self.most_words = 0
+        self.biggest_url = None
+
         # remove the tokens file from the last run
         if os.path.exists(config.tokens_file) and restart:
             os.remove(config.tokens_file)
@@ -32,9 +36,20 @@ class Tokenizer:
         for text in visible_texts:
             line = text.lower()
             tokens = re.split("[^A-Za-z0-9']", line)
-            tokens = filter(self._is_valid, tokens)
             final_tokens.extend(tokens)
+
+        # for question 2
+        self._save_url_with_most_content(final_tokens, resp.url)
+
+        # filter the tokens for stop words and 
+        final_tokens = filter(self._is_valid, final_tokens)
         return final_tokens
+
+    # for question 2
+    def _save_url_with_most_content(self, tokens, url):
+        if len(tokens) > self.most_words:
+            self.biggest_url = url
+            self.most_words = len(tokens)
 
     # generates stop set 
     def _gen_stop_set(self, config):
@@ -50,13 +65,12 @@ class Tokenizer:
 
     # tests if token is valid
     def _is_valid(self, token):
-        return token != "" and token not in self.stop_set and len(token) >= 3
+        return token not in self.stop_set and len(token) >= 3
 
     # This function return true
     # 1. if text element is not comment inside html.
     # 2. if text element is not inside invalid html tags.
     # Refered to : https://stackoverflow.com/questions/1936466/beautifulsoup-grab-visible-webpage-text
-
     def _elem_check(self, element):
         if isinstance(element, Comment):
             return False
