@@ -86,11 +86,13 @@ def extract_next_links(url, resp):
 def is_valid(url):
 	try:
 		parsed = urlparse(url)
+
 		if parsed.scheme not in set(["http", "https"]):
 			return False
 
 		if len(parsed.fragment) != 0 | len(parsed.query) != 0:
 			return False
+
 
 		if re.match(
 			r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -108,9 +110,11 @@ def is_valid(url):
 				return False
 
 
-			if (re.match(r".*(\b(\.|)ics\.uci\.edu\b|\b(\.|)cs\.uci\.edu\b" +
-							r"|\b(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu\b" +
-							r"|\btoday\.uci\.edu/department/information_computer_sciences\b)", url) is not None):
+			if (re.match(r".*\b(\.|)ics\.uci\.edu\b.*" +
+						 r"|.*\b(\.|)cs\.uci\.edu\b.*" +
+						 r"|.*\b(\.|)informatics\.uci\.edu\b.*" +
+						 r"|.*\b(\.|)stat\.uci\.edu\b.*" +
+						 r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url) is not None):
 
 				return True
 
@@ -125,8 +129,7 @@ def is_valid(url):
 		print ("TypeError for ", parsed)
 		raise
 
-urls = ['https://wics.ics.uci.edu/events/2021-01-25', 'https://wics.ics.uci.edu/events/category/social-gathering/2020-05',
-		'https://wics.ics.uci.edu/events/category/project-meeting/2019-04', 'https://wics.ics.uci.edu/events/category/project-meeting']
+urls = ['https://aa.cs.uci.edu/department/information_computer_sciences']
 
 for url in urls:
 	print(is_valid(url))
