@@ -100,14 +100,22 @@ def is_valid(url):
 			+ r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
 			+ r"|epub|dll|cnf|tgz|sha1"
 			+ r"|thmx|mso|arff|rtf|jar|csv"
-			+ r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()) is None:
+			+ r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|odc)$", parsed.path.lower()) is None:
+
+			if re.match(r"https://wics\.ics\.uci\.edu/events/\d{4}(-\d+)+." +
+						r"|https://wics.ics.uci.edu/events/category/social-gathering/\d{4}(-\d+)+."+
+						r"|https://wics.ics.uci.edu/events/category/project-meeting/\d{4}(-\d+)+."):
+				return False
 
 
-			if (re.match(r".*((\.|)ics\.uci\.edu|(\.|)cs\.uci\.edu|(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu" +
-							r"|today\.uci\.edu/department/information_computer_sciences)", url) is not None):
+			if (re.match(r".*(\b(\.|)ics\.uci\.edu\b|\b(\.|)cs\.uci\.edu\b|\b(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu\b" +
+							r"|\btoday\.uci\.edu/department/information_computer_sciences\b)", url) is not None):
 
 				return True
 
+			return False
+
+		if requests.head(url).headers['content-length'] > 300000:
 			return False
 
 		return False
@@ -117,7 +125,53 @@ def is_valid(url):
 		raise
 
 
-print(is_valid("https://www.crummy.com/software/BeautifulSoup/bs4/doc/#getting-help"))
+print(is_valid("http://www.ics.uci.edu.ee/~dbrownst"))
+
+
+# https://wics.ics.uci.edu/events/2021-01-25/
+# https://wics.ics.uci.edu/events/category/social-gathering/2020-05
+# https://wics.ics.uci.edu/events/category/project-meeting/2019-04
+
+
+
+
+# urls = ["https://wics.ics.uci.edu/events/category/project-meeting/2019-04",
+# "https://wics.ics.uci.edu/events/category/social-gathering/2020-05",
+# "https://wics.ics.uci.edu/events/2021-01-08",
+# "https://wics.ics.uci.edu/events/2021-01-07",
+# "https://wics.ics.uci.edu/events/2021-01-06",
+# "https://wics.ics.uci.edu/events/2021-01-05"]
+
+# for url in urls:
+# 	res = requests.get(url)
+# 	print("Content-length for", url, "is", res.headers['content-length'])
+
+
+# import time
+
+# import sys
+# import requests
+
+
+
+# start = timeit.timeit()
+# print("hello")
+# end = timeit.timeit()
+# print(end - start)
+
+# response = requests.get(
+#     "https://news.uci.edu/2021/01/25/increasing-ocean-temperature-threatens-greenlands-ice-sheet/%22")
+
+# print(len("a".encode("utf8")))
+
+# import sys
+# print(len("helloaaa!".encode("utf8")))
+
+# {'content-length': '944', 'content-disposition': 'attachment; filename="Lab001_A_R03.txt"', 'server': 'Apache-Coyote/1.1', 'connection': 'close', 'date': 'Thu, 19 May 2016 05:04:45 GMT', 'content-type': 'text/plain; charset=UTF-8'}
+# >>> int(res.headers['content-length'])
+
+
+
 
 
 # print(urlparse("https://evoke.ics.uci.edu/hollowing-i-in-the-authorship-of-letters-a-note-on-flusser-and-surveillance/?hello&replytocom=48217#respond"))
