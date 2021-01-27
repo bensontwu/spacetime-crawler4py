@@ -3,12 +3,24 @@ from urllib.parse import urlparse
 
 from utils.soup import get_soup
 from utils.trap_check import TrapCheck
+from utils.invalid_links import write_invalid_links_to_file
 
 MAX_CONTENT_SIZE = 50000
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
-    return [link for link in links if is_valid(link)]
+    final_links = []
+    invalid_links = []
+    for link in links:
+        if is_valid(link):
+            final_links.append(link)
+        else:
+            invalid_links.append(link)
+    
+    # for debugging purposes
+    write_invalid_links_to_file(invalid_links, "Failed is_valid check")
+
+    return final_links
 
 def extract_next_links(url, resp):
     soup = get_soup(resp)
@@ -38,7 +50,7 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
         
-        if len(parsed.fragment) != 0 or len(parsed.query) != 0:
+        if len(parsed.fragment) != 0:
             return False
 
         if re.match(
@@ -64,7 +76,7 @@ def is_valid(url):
                 r"|.*\b(\.|)informatics\.uci\.edu\b.*" +
                 r"|.*\b(\.|)stat\.uci\.edu\b.*" +
                 r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url)
-                
+
     except TypeError:
         print("TypeError for ", parsed)
         raise

@@ -3,6 +3,7 @@ from threading import Thread
 from utils.download import download
 from utils.response_validator import ResponseValidator
 from utils import get_logger
+from utils.invalid_links import write_invalid_links_to_file
 from scraper import scraper
 import time
 
@@ -21,7 +22,7 @@ class Worker(Thread):
             tbd_url = self.frontier.get_tbd_url()
             if not tbd_url:
                 self.logger.info("Frontier is empty. Stopping Crawler.")
-                
+
                 # For question 2
                 self.logger.info(f"Biggest url: {self.tokenizer.biggest_url}")
                 break
@@ -32,7 +33,8 @@ class Worker(Thread):
             
             if not ResponseValidator.is_worth_scraping(resp):
                 # skip this url
-                print(f"NOT WORTH SCRAPING - SKIPPING: {tbd_url}")
+                # for debugging purposes
+                write_invalid_links_to_file([tbd_url], "Failed ResponseValidator")
                 continue
 
             scraped_urls = scraper(tbd_url, resp)
