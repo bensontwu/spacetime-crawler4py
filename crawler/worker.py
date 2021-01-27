@@ -1,6 +1,7 @@
 from threading import Thread
 
 from utils.download import download
+from utils.response_validator import ResponseValidator
 from utils import get_logger
 from scraper import scraper
 import time
@@ -25,6 +26,12 @@ class Worker(Thread):
             self.logger.info(
                 f"Downloaded {tbd_url}, status <{resp.status}>, "
                 f"using cache {self.config.cache_server}.")
+            
+            if not ResponseValidator.is_worth_scraping(resp):
+                # skip this url
+                print(f"NOT WORTH SCRAPING - SKIPPING: {tbd_url}")
+                continue
+
             scraped_urls = scraper(tbd_url, resp)
             for scraped_url in scraped_urls:
                 self.frontier.add_url(scraped_url)

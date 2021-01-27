@@ -1,6 +1,5 @@
 import re
 from urllib.parse import urlparse
-import requests
 
 from utils.soup import get_soup
 from utils.trap_check import TrapCheck
@@ -41,14 +40,6 @@ def is_valid(url):
         
         if len(parsed.fragment) != 0 or len(parsed.query) != 0:
             return False
-        
-        # check content length
-        try:
-            response = requests.head(url)
-            if response.status_code != 200 or response.headers['content-length'] == 0 or response.headers['content-length'] > MAX_CONTENT_SIZE:
-                return False
-        except KeyError:
-            pass
 
         if re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
