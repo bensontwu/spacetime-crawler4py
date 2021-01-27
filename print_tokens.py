@@ -22,7 +22,7 @@ def compute_word_frequencies(tokens: list) -> dict:
 
 def print_top_50_frequencies(tok_freqs: dict) -> None:
     for i, assoc in enumerate(sorted(tok_freqs, key=tok_freqs.get, reverse=True)[:50]):
-        print(f"{i}:\t{assoc}\t{tok_freqs[assoc]}")
+        print(f"{i+1}:\t{assoc}\t{tok_freqs[assoc]}")
 
 
 if __name__ == "__main__":

@@ -16,12 +16,16 @@ class SubDomainPrinter:
     def print_sub_doms_to_file(self, urls: list) -> None:
         with open(self.config.subdomain_file, "a") as file:
             for url in urls:
-                dom = urlparse(url).hostname
+                dom = self._strip_www(urlparse(url).hostname)
                 if self._is_subdomain(dom):
                     file.write(dom + '\n')
     
+    # remove www. part of the url
+    def _strip_www(self, sub_dom: str) -> str:
+        sub_dom.replace("www.", "", 1)
+
     # checks if domain is a subdomain
     def _is_subdomain(self, sub_dom: str) -> bool:
         re_string = f"^((.+)\.)+{re.escape(self.domain)}$"
         pattern = re.compile(re_string)
-        return pattern.match(sub_dom) and sub_dom != ("www." + self.domain)
+        return pattern.match(sub_dom)
