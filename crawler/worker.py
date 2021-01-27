@@ -24,7 +24,10 @@ class Worker(Thread):
                 self.logger.info("Frontier is empty. Stopping Crawler.")
 
                 # For question 2
-                self.logger.info(f"Biggest url: {self.tokenizer.biggest_url}")
+                print("--------------------------------------------------")
+                print(f"Url with most content:\t{self.tokenizer.biggest_url}")
+                print(f"# of characters:\t{self.tokenizer.most_words}")
+                print("--------------------------------------------------")
                 break
             resp = download(tbd_url, self.config, self.logger)
             self.logger.info(
