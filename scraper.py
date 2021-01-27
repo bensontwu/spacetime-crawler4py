@@ -49,11 +49,22 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-                + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()):
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|odc)$", parsed.path.lower()):
+            return False
+        
+        if re.match(
+                    r"http(s|)://wics\.ics\.uci\.edu/events/\d{4}(-\d+)+." +
+                    r"|http(s|)://wics\.ics\.uci\.edu/events/category/social-gathering/\d{4}(-\d+)+."+
+                    r"|http(s|)://wics\.ics\.uci\.edu/events/category/project-meeting/\d{4}(-\d+)+.", url):
             return False
 
-        return (re.match(r".*((\.|)ics\.uci\.edu|(\.|)cs\.uci\.edu|(\.|)informatics\.uci\.edu|(\.|)stat\.uci\.edu" +
-                         r"|today\.uci\.edu/department/information_computer_sciences)", parsed.netloc))
+        return re.match(
+                r".*\b(\.|)ics\.uci\.edu\b.*" +
+                r"|.*\b(\.|)cs\.uci\.edu\b.*" +
+                r"|.*\b(\.|)informatics\.uci\.edu\b.*" +
+                r"|.*\b(\.|)stat\.uci\.edu\b.*" +
+                r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url)
+                
     except TypeError:
         print("TypeError for ", parsed)
         raise
