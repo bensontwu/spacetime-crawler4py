@@ -15,6 +15,7 @@ class Worker(Thread):
         self.frontier = frontier
         self.subdomain_printer = subdomain_printer
         self.tokenizer = tokenizer
+        self.unique_urls = 0
         super().__init__(daemon=True)
         
     def run(self):
@@ -22,6 +23,11 @@ class Worker(Thread):
             tbd_url = self.frontier.get_tbd_url()
             if not tbd_url:
                 self.logger.info("Frontier is empty. Stopping Crawler.")
+
+                # For question 1
+                print("--------------------------------------------------")
+                print(f"Number of unique urls:\t{self.unique_urls}")
+                print("--------------------------------------------------")
 
                 # For question 2
                 print("--------------------------------------------------")
@@ -39,6 +45,8 @@ class Worker(Thread):
                 # for debugging purposes
                 write_invalid_links_to_file([tbd_url], "Failed ResponseValidator")
                 continue
+            
+            self.unique_urls += 1
 
             scraped_urls = scraper(tbd_url, resp)
             for scraped_url in scraped_urls:
