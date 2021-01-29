@@ -22,7 +22,7 @@ class SubDomainPrinter:
     
     # remove www. part of the url
     def _strip_www(self, sub_dom: str) -> str:
-        sub_dom.replace("www.", "", 1)
+        return sub_dom.replace("www.", "", 1)
 
     # checks if domain is a subdomain
     def _is_subdomain(self, sub_dom: str) -> bool:

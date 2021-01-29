@@ -25,3 +25,8 @@ class Config(object):
         # Tokenizer configs
         self.tokens_file = config["LOCAL PROPERTIES"]["TOKENS"]
         self.stop_words = config["LOCAL PROPERTIES"]["STOP_WORDS"]
+        self.word_count_file = config["LOCAL PROPERTIES"]["WORD_COUNT_FILE"]
+
+        # Simhash configs
+        self.simhash_tolerance = int( config["LOCAL PROPERTIES"]["SIMHASH_TOLERANCE"] )
+        self.simhash_width = int( config["LOCAL PROPERTIES"]["SIMHASH_WIDTH"] )

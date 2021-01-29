@@ -6,6 +6,7 @@ from utils import get_logger
 from utils.invalid_links import write_invalid_links_to_file
 from scraper import scraper
 import time
+from utils.simhash_check import SimhashCheck
 
 
 class Worker(Thread):
@@ -16,6 +17,7 @@ class Worker(Thread):
         self.subdomain_printer = subdomain_printer
         self.tokenizer = tokenizer
         self.unique_urls = 0
+        self.simhash_check = SimhashCheck(config)
         super().__init__(daemon=True)
         
     def run(self):
@@ -46,6 +48,14 @@ class Worker(Thread):
                 write_invalid_links_to_file([tbd_url], "Failed ResponseValidator")
                 continue
             
+            # hash = self.simhash_check.get_hash(resp)
+            # near_dups = self.simhash_check.get_near_dups(hash)
+            # if len( near_dups ) > 0:
+            #     # skip this url
+            #     write_invalid_links_to_file([tbd_url], f"Failed Simhash Check, near dups: {near_dups}")
+            #     continue
+            # self.simhash_check.add_hash(tbd_url, hash)
+            
             self.unique_urls += 1
 
             scraped_urls = scraper(tbd_url, resp)
@@ -56,6 +66,7 @@ class Worker(Thread):
             self.subdomain_printer.print_sub_doms_to_file(scraped_urls)
 
             # printing tokens
+            self.tokenizer.print_word_count_to_file(tbd_url, resp)
             self.tokenizer.print_tokens_to_file(resp)
 
             self.frontier.mark_url_complete(tbd_url)

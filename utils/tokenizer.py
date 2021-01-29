@@ -23,6 +23,12 @@ class Tokenizer:
             for token in self._tokenize(resp):
                 file.write(token + " ")
     
+    # count words per url
+    def print_word_count_to_file(self, url, resp) -> list:
+        with open(self.config.word_count_file, "a") as file:
+            tokens = self._tokenize(resp)
+            file.write(f"{url}:\t{len(tokens)}\n")
+    
     # Takes response object and generates a list of tokens
     def _tokenize(self, resp) -> list:
         final_tokens = []
@@ -43,7 +49,7 @@ class Tokenizer:
 
         # filter the tokens for stop words and 
         final_tokens = filter(self._is_valid, final_tokens)
-        return final_tokens
+        return list(final_tokens)
 
     # for question 2
     def _save_url_with_most_content(self, tokens, url):
