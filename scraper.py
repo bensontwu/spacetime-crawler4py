@@ -60,39 +60,14 @@ def extract_next_links(url, resp):
 	return urls
 
 
-# def is_valid(url):
-#     try:
-#         parsed = urlparse(url)
-#         if parsed.scheme not in set(["http", "https"]):
-#             return False
-#         return ((re.match(
-#             r"..(css|js|bmp|gif|jpe?g|ico"
-#             + r"|png|tiff?|mid|mp2|mp3|mp4"
-#             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
-#             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
-#             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-#             + r"|epub|dll|cnf|tgz|sha1"
-#             + r"|thmx|mso|arff|rtf|jar|csv"
-#             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower() is None)))
-
-#         # and (re.match(r"..(ics.uci.edu|cs.uci.edu|informatics.uci.edu|stat.uci.edu" +
-#         #                 r"|today.uci.edu/department/information_computer_sciences)", url) is not None))
-
-#     except TypeError:
-#         print ("TypeError for ", parsed)
-#         raise
-
-
 def is_valid(url):
 	try:
 		parsed = urlparse(url)
-
 		if parsed.scheme not in set(["http", "https"]):
 			return False
-
-		if len(parsed.fragment) != 0 | len(parsed.query) != 0:
+		
+		if len(parsed.fragment) != 0:
 			return False
-
 
 		if re.match(
 			r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -102,37 +77,121 @@ def is_valid(url):
 			+ r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
 			+ r"|epub|dll|cnf|tgz|sha1"
 			+ r"|thmx|mso|arff|rtf|jar|csv"
-			+ r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|odc)$", parsed.path.lower()) is None:
-
-			if re.match(r"http(s|)://wics\.ics\.uci\.edu/events/\d{4}(-\d+)+." +
-						r"|http(s|)://wics\.ics\.uci\.edu/events/category/social-gathering/\d{4}(-\d+)+."+
-						r"|http(s|)://wics\.ics\.uci\.edu/events/category/project-meeting/\d{4}(-\d+)+.", url) is not None:
-				return False
-
-
-			if (re.match(r".*\b(\.|)ics\.uci\.edu\b.*" +
-						 r"|.*\b(\.|)cs\.uci\.edu\b.*" +
-						 r"|.*\b(\.|)informatics\.uci\.edu\b.*" +
-						 r"|.*\b(\.|)stat\.uci\.edu\b.*" +
-						 r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url) is not None):
-
-				return True
-
+			+ r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt|odc)$", parsed.path.lower()):
+			return False
+		
+		if re.match(
+					r"http(s|)://wics\.ics\.uci\.edu/events/\d{4}(-\d+)+." +
+					r"|http(s|)://wics\.ics\.uci\.edu/events/category/social-gathering/\d{4}(-\d+)+."+
+					r"|http(s|)://wics\.ics\.uci\.edu/events/category/project-meeting/\d{4}(-\d+)+.", url):
 			return False
 
-		if requests.head(url).headers['content-length'] > 300000:
-			return False
+		if re.match(
+				r".*\b(\.|)ics\.uci\.edu\b.*" +
+				r"|.*\b(\.|)cs\.uci\.edu\b.*" +
+				r"|.*\b(\.|)informatics\.uci\.edu\b.*" +
+				r"|.*\b(\.|)stat\.uci\.edu\b.*" +
+				r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url):
+			return True
+			
+		import urllib.robotparser
 
-		return False
+		try:
+			# 1. Create RobotFileParser instance
+			rp = urllib.robotparser.RobotFileParser()
+			# 2. Set URL
+			# Robots.txt is always there after the root url
+			print(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+			rp.set_url(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+			# 3. Read and interpret robots.txt
+			rp.read()
+
+			# Return True if the url is allowed to be fetch
+			return rp.can_fetch("*", url)
+
+		except urllib.error.URLError:
+			print("Robots.txt doesn't exist for ", parsed.scheme + "://" + parsed.netloc)
+
+			return True
 
 	except TypeError:
-		print ("TypeError for ", parsed)
+		print("TypeError for ", parsed)
 		raise
 
-urls = ['https://aa.cs.uci.edu/department/information_computer_sciences']
+
+# import urllib.robotparser
+
+# def is_valid_url(url):
+
+# 		parsed = urlparse(url)
+
+# 		try:
+# 			# 1. Create RobotFileParser instance
+# 			rp = urllib.robotparser.RobotFileParser()
+# 			# 2. Set URL
+# 			# Robots.txt is always there after the root url
+# 			print(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+# 			rp.set_url(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+# 			# 3. Read and interpret robots.txt
+# 			rp.read()
+
+# 			# Return True if the url is allowed to be fetch
+# 			return rp.can_fetch("*", url)
+
+# 		except urllib.error.URLError:
+# 			print("Robots.txt doesn't exist for ", parsed.scheme + "://" + parsed.netloc)
+
+
+urls = ["https://wics.ics.uci.edu/events/", "https://wics.ics.uci.edaaaa/events/", 
+"https://www.ics.uci.edu/community/news/", "https://support.ics.uci.edu/robots.txt",
+"https://support.ics.uci.edu/"]
+
+# There is error for https://support.ics.uci.edu/robots.txt
 
 for url in urls:
 	print(is_valid(url))
+
+# parsed = urlparse(url)
+
+# print(parsed.scheme + "://" + parsed.netloc + "/robots.txt")
+# 
+# urls = ['https://aa.cs.uci.edu/department/information_computer_sciences',
+# 		'https://cs.uci.edu/department/information_computer_sciences',
+# 		'https://wics.economicics.uci.edu/events/category/social-gathering/aafa/']
+# for url in urls:
+# 	print(is_valid(url))
+
+
+# # ---- How to check if specific URL is allowed to access using robots.txt ---
+# import urllib.robotparser
+
+# root_urls = "https://www.ics.uci.edu/robots.txt"
+# # robots_url = url + "robots.txt"
+
+# try:
+# 	# 1. Create RobotFileParser instance
+# 	rp = urllib.robotparser.RobotFileParser()
+# 	# 2. Set URL
+# 	rp.set_url(robots_url)
+# 	# 3. Read and interpret robots.txt
+# 	rp.read()
+
+# except urllib.error.URLError:
+# 	print("URL Doesn't exist")
+
+
+# url = "https://www.ics.uci.edu/faculty/"
+
+# # Check if we are able to crawl its url
+# # rp.can_fetch(user_agent, url)
+# print('*: '+str(rp.can_fetch('*', url)))
+
+
+
+# # (1-2)robotsから取得できるか確認
+# print('baiduspider: '+ str(rp.can_fetch('baiduspider', url)))
+
+
 
 
 # https://wics.ics.uci.edu/events/2021-01-25/
