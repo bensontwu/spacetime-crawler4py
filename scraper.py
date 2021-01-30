@@ -142,8 +142,6 @@ def simhash(tokens):
 		# Ex: 165 → 0001010010111001 so the list will be something like ['001010010111001', '111010010110001',...]
 		lst = [f'{i:08b}' for i in ida]
 
-		print(lst)
-
 		# Join each character byte into token byte
 		# Ex:['001010010111001', '111010010110001',...] → '001010010111001111010010110001'
 		# This will become Ex: hello = '001010010111001111010010110001'
@@ -159,24 +157,34 @@ def simhash(tokens):
 
 	total=0
 
+	print(binary_tokens)
+
+	print("tot_lst")
+
 	# Conduct mathmatical operations
 	# If bit is 1, add weight w. If bit is 0, substract weight w.
-	# range(0,16) because token is represented as 16 bits
-	for i in range(0,16):
+	# range(0,128) because token is represented as 16 bytes
+	for i in range(0,128):
 		for j in range(0, len(binary_tokens)):
 
 			# Decide weight from token frequency
 			w = int(freq_dict[binary_tokens[j]])
 
+			# print("weight:", w)
+			# print(int(binary_tokens[j][i]))
+
 			if int(binary_tokens[j][i]) == 1:
 				total += w
 			else:
 				total -= w
+
 		tot_lst.append(total)
 
-		# print(tot_lst)
+		total=0
 
-	finger_print = [1 if i >= 0 else 0 for i in tot_lst]
+	print(tot_lst)
+
+	finger_print = [1 if i > 0 else 0 for i in tot_lst]
 
 	return finger_print
 
@@ -186,24 +194,26 @@ def similarity(sim1, sim2):
 	num_same = 0
 
 	# Calculate number of same elements
-	# Ex: 0110000000000000 and 0110000000000000 has sixteen same elements 
-	for i in range(0,16):
+	# Ex: 0110000000000000 and 0110000000000000 has 16 same elements 
+	for i in range(0,128):
 		if sim1[i] == sim2[i]:
 			num_same+=1
+	print(num_same)
 
-
-	print("Similarity: ", num_same/16)
+	print("Similarity: ", num_same/128)
 
 
 sim1 = simhash(["Hello~!","welcome","to","another","lecture","of","information","retrieval"])
-sim2 = simhash(["Hello~!","welcome","to","another","lecture","of","information","retrieva"])
+sim2 = simhash(["Hello~!","welcome","to","another","lecture","of","information","visualization"])
 
+# sim1 = simhash(["word","eel","ab",'great','aefaf'])
+# sim2 = simhash(["word","eel","zz",'great','eawfewf'])
 
-# sim1 = simhash(["aa"])
-# sim2 = simhash(["ab"])
 
 print("sim1 is: ", sim1)
 print("sim2 is: ", sim2)
+
+# print(len(sim1))
 
 similarity(sim1, sim2)
 
