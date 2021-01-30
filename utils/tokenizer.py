@@ -27,7 +27,8 @@ class Tokenizer:
     def print_word_count_to_file(self, url, resp) -> list:
         with open(self.config.word_count_file, "a") as file:
             tokens = self._tokenize(resp)
-            file.write(f"{url}:\t{len(tokens)}\n")
+            if len(tokens) >= 100:
+                file.write(f"{url}:\t{len(tokens)}\n")
     
     # Takes response object and generates a list of tokens
     def _tokenize(self, resp) -> list:
