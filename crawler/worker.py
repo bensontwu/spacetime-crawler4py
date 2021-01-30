@@ -1,3 +1,4 @@
+from os import write
 from threading import Thread
 
 from utils.download import download
@@ -7,6 +8,7 @@ from utils.invalid_links import write_invalid_links_to_file
 from scraper import scraper
 import time
 from utils.simhash_check import SimhashCheck
+from utils.robots import robot_can_fetch
 
 
 class Worker(Thread):
@@ -46,6 +48,10 @@ class Worker(Thread):
                 # skip this url
                 # for debugging purposes
                 write_invalid_links_to_file([tbd_url], "Failed ResponseValidator")
+                continue
+            
+            if not robot_can_fetch(tbd_url):
+                write_invalid_links_to_file([tbd_url], "Failed robot check")
                 continue
             
             # hash = self.simhash_check.get_hash(resp)
