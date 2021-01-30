@@ -20,18 +20,18 @@ class Tokenizer:
     # takes response object and prints tokens to file
     def print_tokens_to_file(self, resp) -> list:
         with open(self.config.tokens_file, "a") as file:
-            for token in self._tokenize(resp):
+            for token in self.tokenize(resp):
                 file.write(token + " ")
     
     # count words per url
     def print_word_count_to_file(self, url, resp) -> list:
         with open(self.config.word_count_file, "a") as file:
-            tokens = self._tokenize(resp)
+            tokens = self.tokenize(resp)
             if len(tokens) >= 100:
                 file.write(f"{url}:\t{len(tokens)}\n")
     
     # Takes response object and generates a list of tokens
-    def _tokenize(self, resp) -> list:
+    def tokenize(self, resp) -> list:
         final_tokens = []
 
         soup = get_soup(resp)
@@ -81,6 +81,6 @@ class Tokenizer:
     def _elem_check(self, element):
         if isinstance(element, Comment):
             return False
-        elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]']:
+        elif element.parent.name in ['style', 'script', 'head', 'meta', '[document]', 'a']:
             return False
         return True

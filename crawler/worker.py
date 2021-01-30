@@ -1,5 +1,6 @@
 from os import write
 from threading import Thread
+from utils.simhash_checker import SimhashChecker
 
 from utils.download import download
 from utils.response_validator import ResponseValidator
@@ -7,7 +8,7 @@ from utils import get_logger
 from utils.invalid_links import write_invalid_links_to_file
 from scraper import scraper
 import time
-from utils.simhash_check import SimhashCheck
+# from utils.simhash_check import SimhashCheck
 from utils.robots import robot_can_fetch
 
 
@@ -19,7 +20,7 @@ class Worker(Thread):
         self.subdomain_printer = subdomain_printer
         self.tokenizer = tokenizer
         self.unique_urls = 0
-        self.simhash_check = SimhashCheck(config)
+        self.simhash_checker = SimhashChecker(0.8)
         super().__init__(daemon=True)
         
     def run(self):
@@ -54,13 +55,16 @@ class Worker(Thread):
                 write_invalid_links_to_file([tbd_url], "Failed robot check")
                 continue
             
-            # hash = self.simhash_check.get_hash(resp)
-            # near_dups = self.simhash_check.get_near_dups(hash)
-            # if len( near_dups ) > 0:
-            #     # skip this url
-            #     write_invalid_links_to_file([tbd_url], f"Failed Simhash Check, near dups: {near_dups}")
-            #     continue
-            # self.simhash_check.add_hash(tbd_url, hash)
+            # Simhash checking
+            tokens = self.tokenizer.tokenize(resp)
+            hash = self.simhash_checker.get_simhash(tokens)
+            near_dups = self.simhash_checker.get_similar_hashes(hash)
+            if len( near_dups ) > 0:
+                # skip this url
+                write_invalid_links_to_file([tbd_url], f"Failed Simhash Check, near dups: {near_dups}")
+                self.simhash_checker.add_simhash(tbd_url, hash)
+                continue
+            self.simhash_checker.add_simhash(tbd_url, hash)
             
             self.unique_urls += 1
 
