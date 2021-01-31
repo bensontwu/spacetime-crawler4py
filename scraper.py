@@ -71,7 +71,7 @@ def is_valid(url):
             return False
         
         if re.match(
-            r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url):
+            r".*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url):
             return True
 
         return re.match(
