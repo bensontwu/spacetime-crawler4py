@@ -69,13 +69,16 @@ def is_valid(url):
                     r"|http(s|)://wics\.ics\.uci\.edu/events/category/social-gathering/\d{4}(-\d+)+."+
                     r"|http(s|)://wics\.ics\.uci\.edu/events/category/project-meeting/\d{4}(-\d+)+.", url):
             return False
+        
+        if re.match(
+            r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url):
+            return True
 
         return re.match(
                 r".*\b(\.|)ics\.uci\.edu\b.*" +
                 r"|.*\b(\.|)cs\.uci\.edu\b.*" +
                 r"|.*\b(\.|)informatics\.uci\.edu\b.*" +
-                r"|.*\b(\.|)stat\.uci\.edu\b.*" +
-                r"|.*\/\/today\.uci\.edu\/department\/information_computer_sciences\b.*", url)
+                r"|.*\b(\.|)stat\.uci\.edu\b.*", parsed.netloc)
 
     except TypeError:
         print("TypeError for ", parsed)

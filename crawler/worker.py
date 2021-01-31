@@ -20,7 +20,7 @@ class Worker(Thread):
         self.subdomain_printer = subdomain_printer
         self.tokenizer = tokenizer
         self.unique_urls = 0
-        self.simhash_checker = SimhashChecker(0.8)
+        self.simhash_checker = SimhashChecker(config.simhash_threshold)
         super().__init__(daemon=True)
         
     def run(self):
