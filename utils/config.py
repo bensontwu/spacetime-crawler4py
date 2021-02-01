@@ -28,5 +28,4 @@ class Config(object):
         self.word_count_file = config["LOCAL PROPERTIES"]["WORD_COUNT_FILE"]
 
         # Simhash configs
-        self.simhash_threshold = int(
-            config["LOCAL PROPERTIES"]["SIMHASH_THRESHOLD"])
+        self.simhash_threshold = float(config["LOCAL PROPERTIES"]["SIMHASH_THRESHOLD"])
