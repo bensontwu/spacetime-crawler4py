@@ -44,11 +44,20 @@ class Worker(Thread):
             self.logger.info(
                 f"Downloaded {tbd_url}, status <{resp.status}>, "
                 f"using cache {self.config.cache_server}.")
+
+            if ResponseValidator.error_code(resp):
+                write_invalid_links_to_file([tbd_url], "Had error code")
+                continue
+
+            # Count unique urls as urls that don't return error codes
+            self.unique_urls += 1
             
-            if not ResponseValidator.is_worth_scraping(resp):
-                # skip this url
-                # for debugging purposes
-                write_invalid_links_to_file([tbd_url], "Failed ResponseValidator")
+            if ResponseValidator.is_empty(resp):
+                write_invalid_links_to_file([tbd_url], "Was empty")
+                continue
+
+            if ResponseValidator.too_large(resp):
+                write_invalid_links_to_file([tbd_url], "Was too large")
                 continue
             
             if not robot_can_fetch(tbd_url):
@@ -65,8 +74,6 @@ class Worker(Thread):
                 self.simhash_checker.add_simhash(tbd_url, hash)
                 continue
             self.simhash_checker.add_simhash(tbd_url, hash)
-            
-            self.unique_urls += 1
 
             scraped_urls = scraper(tbd_url, resp)
             for scraped_url in scraped_urls:
