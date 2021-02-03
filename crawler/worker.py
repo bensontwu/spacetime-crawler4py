@@ -37,7 +37,7 @@ class Worker(Thread):
                 # For question 2
                 print("--------------------------------------------------")
                 print(f"Url with most content:\t{self.tokenizer.biggest_url}")
-                print(f"# of characters:\t{self.tokenizer.most_words}")
+                print(f"# of words:\t{self.tokenizer.most_words}")
                 print("--------------------------------------------------")
                 break
             resp = download(tbd_url, self.config, self.logger)
